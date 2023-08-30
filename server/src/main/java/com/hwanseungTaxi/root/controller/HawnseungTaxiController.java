@@ -1,5 +1,7 @@
 package com.hwanseungTaxi.root.controller;
 
+import com.hwanseungTaxi.root.kakaoMobility.KakaoMobilityService;
+import com.hwanseungTaxi.root.kakaoMobility.TaxiInfoEntity;
 import com.hwanseungTaxi.root.mockData.MockDataService;
 import com.hwanseungTaxi.root.mockData.entity.MockEntity;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -18,20 +21,22 @@ import java.io.IOException;
 public class HawnseungTaxiController {
 
     private final MockDataService mockDataService;
+    private final KakaoMobilityService kakaoMobilityService;
 
     @GetMapping("/directions")
     public ResponseEntity getDirections(@RequestParam String destination, @RequestParam int minFare, @RequestParam int maxFare) throws IOException {
         /**
          * 0. destination에 해당하는 json 파일 불러와서 객체로 저장해두기
          * */
-        MockEntity entity = mockDataService.getEntity(destination);
+        MockEntity mockEntity = mockDataService.getEntity(destination);
         /**
          * 1. 택시 요금 범위 카카오 모빌리티 API 처리 객체에 넘겨줘서 택시비 범위 내의 목적지 지점들 얻기
          * 얻은 목적지 지점들은 좌표값, 목적지명, 택시비, 이동시간을 저장하도록한다.
          * */
-
+        List<TaxiInfoEntity> taxiInfoEntities = kakaoMobilityService.getTaxiInfoEntities(mockEntity, maxFare);
         /**
-         * 2. 1번에서 얻은 리스트를 버스 도착 예정 시간 API 처리 객체에 넘겨줘서 택시 이동시간 후 도착했을 때의 예상 대기 시간을 얻기
+         * 2. mockEntity에서 각 구간까지의 걸리는 시간 계산해서 Map 형태로 저장
+         * 가장 첫번째 정류장에서의 대기시간 추가하기
          * */
         /**
          * 3. 1번에서 얻은 리스트의 목적지 지점들에 대해 대중교통 예상 이동 시간 얻기
