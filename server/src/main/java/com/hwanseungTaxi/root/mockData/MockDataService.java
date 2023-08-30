@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,13 @@ public class MockDataService {
         MockEntity entity;
 
         if(destination.equals("gangnam")) {
-            entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\YonginToGangnam.json"), MockEntity.class);
+            LocalTime currentTime = LocalTime.now();
+            LocalTime elevenAM = LocalTime.of(11, 0);
+            if(currentTime.isBefore(elevenAM)){
+                entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\YonginToGangnamBefore11.json"), MockEntity.class);
+            }else {
+                entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\YonginToGangnamAfter11.json"), MockEntity.class);
+            }
         } else if(destination.equals("330")) {
             entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\SushiTo330SubwayNBus.json"), MockEntity.class);
         } else { // 일치하지 않은 경우에도 의정부 객체를 내보내도록 설정

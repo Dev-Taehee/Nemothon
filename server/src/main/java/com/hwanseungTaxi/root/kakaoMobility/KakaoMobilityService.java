@@ -11,6 +11,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class KakaoMobilityService {
 //    }
 
     public List<TaxiInfoEntity> getTaxiInfoEntities(MockEntity mockEntity, int maxFare) {
-        List<TaxiInfoEntity> taxiInfoEntities = new LinkedList<>();
+        List<TaxiInfoEntity> taxiInfoEntities = new ArrayList<>();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -82,7 +83,7 @@ public class KakaoMobilityService {
         String startX = mockEntity.metaData.requestParameters.startX;
         String startY = mockEntity.metaData.requestParameters.startY;
 
-        // Parallel processing using parallelStream
+        // ParallelStream을 사용하여 병렬처리 진행
         legs.parallelStream().forEach(leg -> {
             if (!leg.mode.equals("WALK")) { // 걷기 지점이 아닌 경우에만 택시 거리 진행
                 List<Station> stationList = leg.passStopList.stationList;

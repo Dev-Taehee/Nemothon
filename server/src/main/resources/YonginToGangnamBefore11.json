@@ -66,8 +66,8 @@
               "Lane": [
                 {
                   "routeColor": "FF3300",
-                  "route": "직행좌석:5003B",
-                  "routeId": "228000182",
+                  "route": "직행좌석:5003A",
+                  "routeId": "228000389",
                   "service": 1,
                   "type": 4
                 }

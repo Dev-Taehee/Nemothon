@@ -4,6 +4,8 @@ import com.hwanseungTaxi.root.kakaoMobility.KakaoMobilityService;
 import com.hwanseungTaxi.root.kakaoMobility.TaxiInfoEntity;
 import com.hwanseungTaxi.root.mockData.MockDataService;
 import com.hwanseungTaxi.root.mockData.entity.MockEntity;
+import com.hwanseungTaxi.root.response.ResponseBodyService;
+import com.hwanseungTaxi.root.response.entity.ResponseBody;
 import com.hwanseungTaxi.root.sectionTimeMap.SectionTimeMapService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class HawnseungTaxiController {
     private final MockDataService mockDataService;
     private final KakaoMobilityService kakaoMobilityService;
     private final SectionTimeMapService sectionTimeMapService;
+    private final ResponseBodyService responseBodyService;
 
     @GetMapping("/directions")
     public ResponseEntity getDirections(@RequestParam String destination, @RequestParam int minFare, @RequestParam int maxFare) throws IOException {
@@ -49,15 +52,14 @@ public class HawnseungTaxiController {
          * 효율성 좋은 순으로 정렬해서 반환하도록 하자
          * */
         LinkedHashMap<String, Double> efficiencyMap = sectionTimeMapService.getEfficiencyMap(taxiInfoEntities, sectionTimeMap);
-        System.out.println(efficiencyMap);
         /**
          * 4. 2번에서 얻은 값과 3번에서 얻은 값의 차를 구한 후 응답 객체로 변환하기
          * */
-
+        ResponseBody responseBody = responseBodyService.getResponseBody(mockEntity, taxiInfoEntities, sectionTimeMap, efficiencyMap);
         /**
          * 5. 응답 객체 반환
          * */
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(responseBody, HttpStatus.OK);
     }
 
 }
