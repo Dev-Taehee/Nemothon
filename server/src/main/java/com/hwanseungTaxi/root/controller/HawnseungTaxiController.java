@@ -49,10 +49,11 @@ public class HawnseungTaxiController {
          * 효율성 좋은 순으로 정렬해서 반환하도록 하자
          * */
         LinkedHashMap<String, Double> efficiencyMap = sectionTimeMapService.getEfficiencyMap(taxiInfoEntities, sectionTimeMap);
+        System.out.println(efficiencyMap);
         /**
          * 4. 2번에서 얻은 값과 3번에서 얻은 값의 차를 구한 후 응답 객체로 변환하기
          * */
-        
+
         /**
          * 5. 응답 객체 반환
          * */
