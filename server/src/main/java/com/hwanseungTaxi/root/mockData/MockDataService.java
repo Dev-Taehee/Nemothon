@@ -29,7 +29,7 @@ public class MockDataService {
         } else if(destination.equals("330")) {
             entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\SushiTo330SubwayNBus.json"), MockEntity.class);
         } else { // 일치하지 않은 경우에도 의정부 객체를 내보내도록 설정
-            entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\HongdaeToUijeongbuSubway.json"), MockEntity.class);
+            entity = objectMapper.readValue(new File("C:\\Users\\wth00\\OneDrive\\Desktop\\Nemotone\\HwanseungTaxi\\server\\src\\main\\resources\\HongdaeToUijeongbuBus.json"), MockEntity.class);
         }
 
         return entity;

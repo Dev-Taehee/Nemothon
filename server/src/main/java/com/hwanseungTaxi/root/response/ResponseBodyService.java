@@ -17,17 +17,19 @@ import java.util.List;
 @Service
 public class ResponseBodyService {
 
-    public ResponseBody getResponseBody(MockEntity mockEntity, List<TaxiInfoEntity> taxiInfoEntities,
-                                        HashMap<String, Integer> sectionTimeMap, LinkedHashMap<String, Double> efficiencyMap) {
+    public ResponseBody getResponseBody(MockEntity mockEntity, List<TaxiInfoEntity> adjustTaxiInfoEntities,
+                                        HashMap<String, Integer> sectionTimeMap, LinkedHashMap<String, Double> efficiencyMap, List<TaxiInfoEntity> taxiInfoEntities) {
+
+        int maxTaxiFare = getMaxTaxiFare(taxiInfoEntities);
 
         HashMap<String, Position> stationInfo = getStationInfo(mockEntity);
-        List<Info> infoList = getInfoList(mockEntity, taxiInfoEntities, sectionTimeMap, efficiencyMap);
+        List<Info> infoList = getInfoList(mockEntity, adjustTaxiInfoEntities, sectionTimeMap, efficiencyMap, maxTaxiFare);
 
         return new ResponseBody(stationInfo, infoList);
     }
 
     private List<Info> getInfoList(MockEntity mockEntity, List<TaxiInfoEntity> taxiInfoEntities,
-                                   HashMap<String, Integer> sectionTimeMap, LinkedHashMap<String, Double> efficiencyMap) {
+                                   HashMap<String, Integer> sectionTimeMap, LinkedHashMap<String, Double> efficiencyMap, int maxTaxiFare) {
         List<Info> infoList = new ArrayList<>();
         // Info -> Summary -> taxiFare, wastedTime, savedTime
         // Info -> steps -> step -> mode, sectionTime, route, routeId, stationList
@@ -37,7 +39,7 @@ public class ResponseBodyService {
             // Summary 정보 작업
             TaxiInfoEntity taxiInfoEntity = getTaxiInfoEntity(taxiInfoEntities, key);
             int savedTime = sectionTimeMap.get(key) - taxiInfoEntity.getTaxiDuration();
-            Summary summary = new Summary(taxiInfoEntity.getTaxiFare(), itinerary.totalTime-savedTime, savedTime);
+            Summary summary = new Summary(taxiInfoEntity.getTaxiFare(), itinerary.totalTime-savedTime, savedTime, maxTaxiFare-taxiInfoEntity.getTaxiFare());
 
             // Steps 정보 작업
             List<Step> steps = new ArrayList<>();
@@ -45,6 +47,7 @@ public class ResponseBodyService {
             Step step = new Step("TAXI", taxiInfoEntity.getTaxiDuration(), null, null, List.of("출발지", taxiInfoEntity.getStationName()));
             steps.add(step);
             boolean isCheck = false; // 택시 목적지를 통과했는지 확인 여부
+            int arrivalNum = 1; // 걷기 도착지명 정보가 모두 "도착지" 이기에 구분을 위한 숫자
             for(Leg leg : legs) {
                 List<String> responseStationList = new ArrayList<>();
                 int duration = 0;
@@ -89,6 +92,8 @@ public class ResponseBodyService {
         HashMap<String, Position> stationInfo = new HashMap<>();
         List<Leg> legs = mockEntity.metaData.plan.itineraries.get(0).legs;
 
+        int arrivalNum = 1;
+
         for(Leg leg : legs) {
             if(leg.mode.equals("WALK")) {
                 Position startPosition = new Position(String.valueOf(leg.start.lon), String.valueOf(leg.start.lat), null);
@@ -104,6 +109,16 @@ public class ResponseBodyService {
             }
         }
         return stationInfo;
+    }
+
+    private  int getMaxTaxiFare(List<TaxiInfoEntity> taxiInfoEntities) {
+        int maxValue = Integer.MIN_VALUE;
+
+        for(TaxiInfoEntity taxiInfoEntity : taxiInfoEntities) {
+            if(maxValue < taxiInfoEntity.getTaxiFare()) maxValue = taxiInfoEntity.getTaxiFare();
+        }
+
+        return maxValue;
     }
 
 }

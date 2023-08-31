@@ -41,7 +41,8 @@ public class HawnseungTaxiController {
          * 1. 택시 요금 범위 카카오 모빌리티 API 처리 객체에 넘겨줘서 택시비 범위 내의 목적지 지점들 얻기
          * 얻은 목적지 지점들은 좌표값, 목적지명, 택시비, 이동시간을 저장하도록한다.
          * */
-        List<TaxiInfoEntity> taxiInfoEntities = kakaoMobilityService.getTaxiInfoEntities(mockEntity, maxFare);
+        List<TaxiInfoEntity> taxiInfoEntities = kakaoMobilityService.getTaxiInfoEntities(mockEntity);
+        List<TaxiInfoEntity> adjustTaxiInfoEntities = kakaoMobilityService.getAdjustTaxiInfoEntities(taxiInfoEntities, minFare, maxFare);
         /**
          * 2. mockEntity에서 각 구간까지의 걸리는 시간 계산해서 Map 형태로 저장
          * 가장 첫번째 정류장에서의 대기시간 추가하기
@@ -52,11 +53,11 @@ public class HawnseungTaxiController {
          * 효율성 = 택시비(W)/대중교통이동시간(s) -> 값이 낮을수록 좋은 효율성을 가진다는 의미다.
          * 효율성 좋은 순으로 정렬해서 반환하도록 하자
          * */
-        LinkedHashMap<String, Double> efficiencyMap = sectionTimeMapService.getEfficiencyMap(taxiInfoEntities, sectionTimeMap);
+        LinkedHashMap<String, Double> efficiencyMap = sectionTimeMapService.getEfficiencyMap(adjustTaxiInfoEntities, sectionTimeMap);
         /**
          * 4. 2번에서 얻은 값과 3번에서 얻은 값의 차를 구한 후 응답 객체로 변환하기
          * */
-        ResponseBody responseBody = responseBodyService.getResponseBody(mockEntity, taxiInfoEntities, sectionTimeMap, efficiencyMap);
+        ResponseBody responseBody = responseBodyService.getResponseBody(mockEntity, adjustTaxiInfoEntities, sectionTimeMap, efficiencyMap, taxiInfoEntities);
         /**
          * 5. 응답 객체 반환
          * */
