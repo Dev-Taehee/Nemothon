@@ -9,6 +9,7 @@ import com.hwanseungTaxi.root.response.entity.ResponseBody;
 import com.hwanseungTaxi.root.sectionTimeMap.SectionTimeMapService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jdom2.JDOMException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class HawnseungTaxiController {
     private final ResponseBodyService responseBodyService;
 
     @GetMapping("/directions")
-    public ResponseEntity getDirections(@RequestParam String destination, @RequestParam int minFare, @RequestParam int maxFare) throws IOException {
+    public ResponseEntity getDirections(@RequestParam String destination, @RequestParam int minFare, @RequestParam int maxFare) throws IOException, JDOMException {
         /**
          * 0. destination에 해당하는 json 파일 불러와서 객체로 저장해두기
          * */
