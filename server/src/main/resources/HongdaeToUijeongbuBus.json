@@ -29,7 +29,7 @@
               }
             }
           },
-          "totalTime": 5541,
+          "totalTime": 7743,
           "legs": [
             {
               "mode": "WALK",
@@ -81,7 +81,7 @@
             {
               "mode": "BUS",
               "routeColor": "0068B7",
-              "sectionTime": 1616,
+              "sectionTime": 3240,
               "route": "간선:761",
               "routeId": "111000014",
               "distance": 9190,
@@ -322,27 +322,9 @@
               }
             },
             {
-              "mode": "WALK",
-              "sectionTime": 0,
-              "distance": 0,
-              "start": {
-                "name": "세명컴퓨터고등학교(중)",
-                "lon": 126.92000277777778,
-                "lat": 37.62414166666667
-              },
-              "end": {
-                "name": "세명컴퓨터고등학교(중)",
-                "lon": 126.92000277777778,
-                "lat": 37.62414166666667
-              },
-              "passShape": {
-                "linestring": "126.920003,37.624142 126.920003,37.624142"
-              }
-            },
-            {
               "mode": "BUS",
               "routeColor": "53B332",
-              "sectionTime": 3202,
+              "sectionTime": 3780,
               "route": "일반:34",
               "routeId": "2183001",
               "distance": 20077,

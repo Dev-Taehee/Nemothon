@@ -29,7 +29,7 @@
               }
             }
           },
-          "totalTime": 4980,
+          "totalTime": 5238,
           "legs": [
             {
               "mode": "WALK",
@@ -81,7 +81,7 @@
             {
               "mode": "BUS",
               "routeColor": "003DA5",
-              "sectionTime": 540,
+              "sectionTime": 480,
               "route": "마을:은평04",
               "routeId": "111900004",
               "distance": 5063,
@@ -164,7 +164,7 @@
             {
               "mode": "BUS",
               "routeColor": "0068B7",
-              "sectionTime": 3720,
+              "sectionTime": 3960,
               "route": "간선:571",
               "routeId": "100100084",
               "distance": 11488,

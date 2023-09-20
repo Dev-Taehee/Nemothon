@@ -39,7 +39,6 @@ public class ResponseBodyService {
             // Summary 정보 작업
             TaxiInfoEntity taxiInfoEntity = getTaxiInfoEntity(taxiInfoEntities, key);
             int savedTime = sectionTimeMap.get(key) - taxiInfoEntity.getTaxiDuration();
-            Summary summary = new Summary(taxiInfoEntity.getTaxiFare(), itinerary.totalTime-savedTime, savedTime, maxTaxiFare-taxiInfoEntity.getTaxiFare());
 
             // Steps 정보 작업
             List<Step> steps = new ArrayList<>();
@@ -47,7 +46,7 @@ public class ResponseBodyService {
             Step step = new Step("TAXI", taxiInfoEntity.getTaxiDuration(), null, null, List.of("출발지", taxiInfoEntity.getStationName()));
             steps.add(step);
             boolean isCheck = false; // 택시 목적지를 통과했는지 확인 여부
-            int arrivalNum = 1; // 걷기 도착지명 정보가 모두 "도착지" 이기에 구분을 위한 숫자
+            boolean isFirst = true; // 택시에서 목적지에 도착한 후, 대중교통 탈 때, 출발지의 duration은 0이 되어야 한다.
             for(Leg leg : legs) {
                 List<String> responseStationList = new ArrayList<>();
                 int duration = 0;
@@ -58,9 +57,14 @@ public class ResponseBodyService {
                             isCheck = true;
                         }
                         if(isCheck) { // 택시 목적지와 같은 정류소를 만난 이후
-                            duration += station.duration;
+                            if(isFirst) {
+                                isFirst = false;
+                            } else {
+                                duration += station.duration;
+                            }
                             responseStationList.add(station.stationName);
                         }
+
                     }
                     if(responseStationList.size()!=0) {
                         Step step1 = new Step(leg.mode, duration,leg.route, leg.routeId, responseStationList);
@@ -72,6 +76,11 @@ public class ResponseBodyService {
                     steps.add(step1);
                 }
             }
+            int wastedTime = 0;
+            for(Step step1 : steps) {
+                wastedTime += step1.sectionTime;
+            }
+            Summary summary = new Summary(taxiInfoEntity.getTaxiFare(), wastedTime, savedTime, maxTaxiFare-taxiInfoEntity.getTaxiFare());
             Info info = new Info(summary, steps);
             infoList.add(info);
         }

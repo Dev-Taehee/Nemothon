@@ -79,13 +79,13 @@ public class SectionTimeMapService {
 
             String stationId = "113000422";
             String routeId = "111000014";
-            return getXMLSeoulBusArrivalInfo(stationId, routeId);
+            return getXMLSeoulBusArrivalInfo(stationId, routeId)*60;
 
         } else if (destination.equals("330")) {
 
             String stationId = "111000034";
             String routeId = "111900004";
-            return getXMLSeoulBusArrivalInfo(stationId, routeId);
+            return getXMLSeoulBusArrivalInfo(stationId, routeId)*60;
 
         } else if (destination.equals("gangnam")) {
             // 용인에서 강남 가는 경로 시작 정류장
